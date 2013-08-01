@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ref http://ant.apache.org/manual/tasksoverview.html -->
+
+<project name="${app.name}" default="run" basedir=".">
+  <property file="build.properties" />
+  <description>${app.description}</description>
+  <path id="classpath">
+    <fileset dir="${lib.dir}" includes="**/*.jar"/>
+  </path>
+
+    <!-- Initialization -->
+  <target name="init" description="Prepare needed directories.">
+    <echo>Init "${app.name}"</echo>
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${classes.dir}" />
+    <mkdir dir="${jar.dir}" />
+    <mkdir dir="${dist.dir}" />
+    <mkdir dir="${lib.dir}" />
+  </target>
+
+    <!-- Cleanup -->
+  <target name="clean" description="Remove all files created by the build/test process.">
+    <delete dir="${classes.dir}" />
+    <delete dir="${dist.dir}" />
+  </target>
+
+    <!-- Compile application -->
+  <target name="compile">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${src.dir}"   destdir="${classes.dir}"  includeantruntime="false">
+       <classpath refid="classpath"  /> 
+    </javac>
+  </target>
+
+    <!-- Java Archive -->
+  <target name="jar" depends="compile">
+     <delete dir="${jar.dir}"/>
+     <mkdir dir="${jar.dir}"/>
+     <jar destfile="${jar.dir}/${app.name}-${app.version}.jar" >
+       <zipgroupfileset dir="${lib.dir}" includes="jets3t-0.6.1.jar" />
+     </jar>
+     <jar destfile="${jar.dir}/${app.name}-${app.version}.jar" basedir="${classes.dir}" update="true"></jar>
+  </target>
+
+</project>
