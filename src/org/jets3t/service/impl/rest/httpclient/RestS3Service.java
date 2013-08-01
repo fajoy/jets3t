@@ -1300,9 +1300,11 @@ public class RestS3Service extends S3Service implements SignedUrlHandler {
                 
                 // Compare our locally-calculated hash with the ETag returned by S3.
                 if (!object.getETag().equals(hexMD5OfUploadedData)) {
+                    /*
                     throw new S3ServiceException("Mismatch between MD5 hash of uploaded data ("
                         + hexMD5OfUploadedData + ") and ETag returned by S3 (" + object.getETag() + ") for: "
                         + object.getKey());
+                    */
                 } else {
                     if (log.isDebugEnabled()) {
                         log.debug("Object upload was automatically verified, the calculated MD5 hash "+ 
