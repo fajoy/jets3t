@@ -1405,6 +1405,7 @@ public class RestS3Service extends S3Service implements SignedUrlHandler {
             metadata.put("x-amz-metadata-directive", "COPY");
         }
         
+        metadata.put("x-amz-metadata-directive", "REPLACE");
         boolean putNonStandardAcl = false;
         if (acl != null) {
             if (AccessControlList.REST_CANNED_PRIVATE.equals(acl)) {
