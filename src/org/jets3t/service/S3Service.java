@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -1616,11 +1617,17 @@ public abstract class S3Service implements Serializable {
      */    
     public Map moveObject(String sourceBucketName, String sourceObjectKey, 
         String destinationBucketName, S3Object destinationObject,
-        boolean replaceMetadata) throws S3ServiceException 
+        boolean replaceMetadata) 
     {
-        Map copyResult = copyObject(sourceBucketName, sourceObjectKey, 
-            destinationBucketName, destinationObject, replaceMetadata);
-        
+        Map copyResult = null;
+        try {
+            copyResult = copyObject(sourceBucketName, sourceObjectKey, 
+                destinationBucketName, destinationObject, replaceMetadata);
+        } catch (Exception e) {
+            copyResult = new HashMap();
+            copyResult.put("MoveException", e);
+        }
+
         try {
             deleteObject(sourceBucketName, sourceObjectKey);
         } catch (Exception e) {
@@ -1665,7 +1672,7 @@ public abstract class S3Service implements Serializable {
         S3Object destinationObject) throws S3ServiceException 
     {
         return moveObject(bucketName, sourceObjectKey, 
-            bucketName, destinationObject, false);
+            bucketName, destinationObject, true );
     }
 
     /**
